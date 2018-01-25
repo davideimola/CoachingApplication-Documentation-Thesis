@@ -1,0 +1,16 @@
+#--------------
+# LaTeX files
+#--------------
+*.log
+*.gz
+*.aux
+*.lof
+*.lot
+*.toc
+*-frn.*
+*.pdf
+
+#--------------
+# macOS files
+#--------------
+.DS_Store
