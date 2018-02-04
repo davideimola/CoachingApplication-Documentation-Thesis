@@ -5,11 +5,47 @@
 
 \documentclass[a4paper,titlepage]{book}
 
-\usepackage[italian]{babel}
+\usepackage[english,italian]{babel}
 \usepackage{frontespizio}
 \usepackage{amsmath,amssymb,graphicx}
 \usepackage{natbib}
 \usepackage{url}
+\usepackage{lipsum}
+\usepackage{hyphenat}
+\usepackage{url}
+\usepackage{listings}
+
+\newcommand\abstractname{Abstract}  %%% here
+\makeatletter
+\if@titlepage
+  \newenvironment{abstract}{%
+      \titlepage
+      \null\vfil
+      \@beginparpenalty\@lowpenalty
+      \begin{center}%
+        \bfseries \abstractname
+        \@endparpenalty\@M
+      \end{center}}%
+     {\par\vfil\null\endtitlepage}
+\else
+  \newenvironment{abstract}{%
+      \if@twocolumn
+        \section*{\abstractname}%
+      \else
+        \small
+        \begin{center}%
+          {\bfseries \abstractname\vspace{-.5em}\vspace{\z@}}%
+        \end{center}%
+        \quotation
+      \fi}
+      {\if@twocolumn\else\endquotation\fi}
+\fi
+\makeatother
+
+
+\hyphenation{Ionic}
+\hyphenation{Apache CouchDB}
+
 
 \begin{document}
 
@@ -22,21 +58,53 @@
 \Corso[Laurea]{Informatica}
 \Annoaccademico{2016--2017}
 \Titoletto{Tesi di Laurea Triennale}
-\Titolo{Applicazione di Coaching in Ionic con interfacciamento a DataBase NoSQL}
+\Titolo{Applicazione di Coaching in Ionic con interazione a DataBase NoSQL}
 \Candidato[VR386238]{Davide Imola}
 \Relatore{Prof. Graziano Pravadelli}
+\Correlatore{Dott. Florenc Demrozi}
 \end{frontespizio}
 
-% Generazione Indice
+% Front
 \frontmatter
-\tableofcontents
-\listoffigures
-\listoftables
 
+% Generazione Sommario
+\begin{abstract}
+La presente tesi \`{e} una documentazione del codice relativo al progetto dell'applicazione per {\foreignlanguage{english} Smartphone} di {\foreignlanguage{english} coaching}. 
+
+In questo documento si vedr\`{a} nel dettaglio la parte relativa all'applicativo scritto in Ionic 3 e l'interazione al {\foreignlanguage{english} DataBase NoSQL} Apache CouchDB.
+
+Nei primi capitoli si vedranno quali componenti sono stati utilizzati per la strutturazione del progetto e delle semplici guide relative alla loro installazione e corretta configurazione.
+
+Nei capitoli restanti andremmo a coprire invece diversi aspetti di studio e progettazione del codice, partendo dall'ideazione di una base per l'interfaccia grafica alla vera e propria stesura del codice.
+\end{abstract}
+
+% Generazione Indice
+\tableofcontents
+
+%Main
 \mainmatter
 % Capitolo 1
-\chapter{Introduzione}
+\chapter{Componenti utilizzate}
 
-Introduzione
+\section{Node.js}
+Per prima cosa andiamo a osservare l'installazione di Node.js, piattaforma {\foreignlanguage{english} event-driven} per il motore JavaScript V8 di Chrome. Bisogna quindi andare a scaricare dal sito \url{https://nodejs.org/en/} la versione corrente.
+
+Al termine dell'installazione sar\`{a} presente sul vostro sistema il {\foreignlanguage{english} node package manager} richiamabile da terminale con il comando
+\begin{lstlisting}[language=bash]
+  $ npm
+\end{lstlisting}
+che utilizzeremo successivamente.
+
+\section{Ionic 3}
+Per lo sviluppo della nostra applicazione si \`{e} utilizzato principalmente Ionic nella sua versione 3, un famoso e completo {\foreignlanguage{english} SDK open-source} per lo sviluppo di applicazioni ibride per dispositivi mobili. 
+Ionic 3 si basa sull'uso di AngularJS e Apache Cordova e utilizza alcune tecnologie inerenti allo sviluppo {\foreignlanguage{english} Web} come CSS, HTML5 e Sass.
+
+Per eseguire l'installazione basta semplicemente eseguire nel proprio terminale il seguente comando
+\begin{lstlisting}[language=bash]
+  $ npm install -g cordova ionic
+\end{lstlisting}
+
+\
+
 
 \end{document}
