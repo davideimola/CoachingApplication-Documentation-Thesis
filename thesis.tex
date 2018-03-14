@@ -14,6 +14,7 @@
 \usepackage{hyphenat}
 \usepackage{url}
 \usepackage{listings}
+\usepackage{dirtree}
 
 \newcommand\abstractname{Abstract}  %%% here
 \makeatletter
@@ -196,7 +197,7 @@ La struttura base del documento JSON per il database \textit{caregivers} \`{e} l
               "end_time": "12:41:56"
             },
             "done": { 
-              "2018-02-03": "2 3 10"
+              "2018-02-03": "2"
             }
           }
         }
@@ -224,7 +225,7 @@ La struttura base del documento JSON per il database \textit{caregivers} \`{e} l
         "general": { 
           "date_of_diagnosis" : "2018-02-03", 
           "Bere Acqua": { 
-            "counter": "2", 
+            "counter": "3", 
             "coachevent1": { 
               "start_time": "12:41:56", 
               "end_time": "12:41:56"
@@ -233,8 +234,12 @@ La struttura base del documento JSON per il database \textit{caregivers} \`{e} l
               "start_time": "12:41:56",
               "end_time": "12:41:56"
             },
+	    "coachevent3": {
+              "start_time": "12:41:56",
+              "end_time": "12:41:56"
+            },
             "done": { 
-              "2018-02-03": "2 3 10"
+              "2018-02-03": "2 3"
             }
           }
         }
@@ -244,9 +249,13 @@ La struttura base del documento JSON per il database \textit{caregivers} \`{e} l
 }
 \end{lstlisting}
 
-Inoltre su Ionic \`{e} presente un Database locale in PouchDB, il quale viene utilizzato, per effettuare le modifiche prima in locale per poi sincronizzarle con la base di dati remota. Onde evitare un database locale troppo amplio si \`{e} deciso di effettuare una sincronizzazione filtrata dei vari documenti anche per non permettere l'accesso a documenti propri per questioni di privacy. 
+La struttura quindi oltre ai vari dati prevede per i Coachee delle patologie, tra cui quella generale che viene generata automaticamente all'inserimento. All'interno di queste patologie si hanno delle \textit{Coach Action} come il bere acqua e essendo che ogni azione pu\`{o} essere eseguita pi\`{u} volte si hanno le varie \textit{Coach Event}. Il campo done serve per avere uno storico dell'esecuzione dei vari eventi in un determinato giorno.
+
+Su Ionic \`{e} inoltre presente un Database locale in PouchDB, il quale viene utilizzato, per effettuare le modifiche prima in locale per poi sincronizzarle con la base di dati remota. Onde evitare un database locale troppo amplio si \`{e} deciso di effettuare una sincronizzazione filtrata dei vari documenti anche per non permettere l'accesso a documenti propri per questioni di privacy. 
 
 Per effettuarla bisogna andare a inserire nel database il design document \ref{lis:ddoc}, il quale viene richiamato dalla funzione di sincronizzazione in Ionic \ref{lis:ionicsync}.
+
+\pagebreak
 \begin{lstlisting}[showspaces=false,
            basicstyle=\ttfamily,
            numbers=left,
@@ -266,7 +275,6 @@ Per effettuarla bisogna andare a inserire nel database il design document \ref{l
 
 \end{lstlisting}
 
-\pagebreak
 \begin{lstlisting}[language=Java,
 	  captionpos=b,
 	  caption=Funzione di sincronizzazione,
@@ -303,5 +311,162 @@ Questo sistema di gestione di branch \`{e} stato utilizzato per poi lasciare la 
 \includegraphics[width=250px]{imgs/git_flow.png}
 \caption{Schema git flow \label{fig:git_flow}}
 \end{figure} 
+
+\section{Ionic}
+Come gi\`{a} precedentemente accennato Ionic utilizza per l'impaginazione delle pagine alcuni componenti web come HTML5 e SASS, mentre la programmazione viene affidata a JavaScript, con riferimenti ad alcune librerie Angular, Cordova e PhoneGap.
+
+Tutto il codice sorgente si basa su alcune librerie scaricabili mediante npm e presenti nel file di configurazione, dopo aver scaricato i sorgenti bisogna quindi scaricare tutte le dipendenze eseguendo dal proprio terminale il seguente comando all'interno della cartella principale.
+
+\begin{lstlisting}[language=bash]
+  $ npm install
+\end{lstlisting}
+
+Se viene generato un errore, si consiglia di eseguire questo comando con i privilegi di amministrazione. Al termine di questo passaggio possiamo eseguire la nostra applicazione, se la si vuole eseguire da web bisogna eseguire il comando:
+
+\begin{lstlisting}[language=bash]
+  $ ionic serve
+\end{lstlisting}
+
+mentre se si desidera ottenere l'applicazione per Android o iOS, in questo caso solo se si usa un Mac con Xcode, i comandi da eseguire diventano i seguenti, l'esempio riporta il caso per iOS quindi per Android basta specificare android al posto di ios.
+
+\begin{lstlisting}[language=bash]
+  $ ionic cordova platform add ios
+  $ ionic cordova run ios
+\end{lstlisting}
+
+La struttura della cartella di lavoro \`{e} come da schema seguente, nella cartella \textit{app} ci sono tutte le informazioni relative a moduli, pagine e menu. La cartella \textit{pages} invece contiene tutte le pagine della applicazioni nidificate in cartelle contenenti i corrispettivi file HTML, SASS e TypeScript.
+Infine nella cartella \textit{providers} sono presenti tutte le funzioni che eseguono le richieste ai DataBase CouchDB, siano queste di set o get e in questo caso restituiscono tramite promise il file JSON richiesto.
+
+
+\dirtree{%
+    .1 src/.
+        .2 app/
+             \ldots{}
+             \begin{minipage}[t]{10cm}
+                Informazioni su moduli, menu e applicazione in generale{.}
+            \end{minipage}.
+        .2 pages/
+		\ldots{}
+            	 \begin{minipage}[t]{15cm}
+                		Pagine dell'applicazione{.}
+            	\end{minipage}.
+		.3 home/
+			\ldots{}
+            	 	\begin{minipage}[t]{15cm}
+                			Pagina esempio{.}
+            		\end{minipage}..
+			.4 home.html
+				\ldots{}
+            	 		\begin{minipage}[t]{15cm}
+                				File HTML della pagina{.}
+            			\end{minipage}.
+			.4 home.ts
+				\ldots{}
+            	 		\begin{minipage}[t]{15cm}
+                				Funzioni TypeScript collegate alla pagina{.}
+            			\end{minipage}.
+			.4 home.scss
+				\ldots{}
+            	 		\begin{minipage}[t]{15cm}
+                				Fogli di stile della pagina in SASS{.}
+            			\end{minipage}.
+        .2 providers/.
+		.3 database/.
+			.4 database.ts
+				\ldots{}
+            	 		\begin{minipage}[t]{8cm}
+                				Funzioni di get o set legate al DB e utilizzate nelle varie pagine{.}
+            			\end{minipage}.
+}
+
+Ora che si \`{e} vista a grandi linee la struttura del progetto, possiamo passare a vedere le pagine presenti e il loro scopo nel progetto.
+
+\pagebreak
+
+\dirtree{%
+    .1 pages/.
+        .2 add-coach-action/
+             \ldots{}
+             \begin{minipage}[t]{7cm}
+                Form di aggiunta di una nuova Coach Action{.}
+            \end{minipage}.
+	.2 add-coach-event/
+             \ldots{}
+             \begin{minipage}[t]{7cm}
+                Form di aggiunta di una nuova Coach Event{.}
+            \end{minipage}.
+	.2 add-pathology/
+             \ldots{}
+             \begin{minipage}[t]{7cm}
+                Form di aggiunta di una nuova Patologia{.}
+            \end{minipage}.
+	.2 caregivers/
+             \ldots{}
+             \begin{minipage}[t]{7cm}
+                Lista di tutti i caregivers presenti sul DataBase{.}
+            \end{minipage}.
+	.2 coach-actions/
+             \ldots{}
+             \begin{minipage}[t]{7cm}
+                Visualizzazione delle Coach Actions{.}
+            \end{minipage}.
+	.2 coach-events/
+             \ldots{}
+             \begin{minipage}[t]{7cm}
+                Visualizzazione delle Coach Events{.}
+            \end{minipage}.
+	.2 coachee-home/
+             \ldots{}
+             \begin{minipage}[t]{7cm}
+                Home page per accesso Coachee{.}
+            \end{minipage}.
+	.2 coachee-register/
+             \ldots{}
+             \begin{minipage}[t]{7cm}
+                Registrazione nuovo Coachee da parte del Caregiver{.}
+            \end{minipage}.
+	.2 coachee-view/
+             \ldots{}
+             \begin{minipage}[t]{7cm}
+                Vista di un determinato Coachee da Caregiver{.}
+            \end{minipage}.
+	.2 coachees/
+             \ldots{}
+             \begin{minipage}[t]{7cm}
+                Lista di tutti i Coachees del Caregiver attualmente loggato{.}
+            \end{minipage}.
+	.2 home/
+             \ldots{}
+             \begin{minipage}[t]{7cm}
+                Form di Login e pagina iniziale della applicazione{.}
+            \end{minipage}.
+	.2 register/
+             \ldots{}
+             \begin{minipage}[t]{7cm}
+                Form di Registrazione esclusiva per Caregivers{.}
+            \end{minipage}.
+}
+
+\chapter{Studio base di UI e UX}
+\section{HomePage Caregivers}
+L'HomePage per il caregiver (\figurename~\ref{fig:Coachees_List}) viene impostata come una rubrica di un telefono per semplificare l'uso. Viene quindi data un'interfaccia e un'esperienza utente riconosciuta, dove si ha una lista dei propri Coachee e cliccando su uno di questi si apre la scheda specifica.
+
+\section{Coachee Info}
+Nella scheda specifica del Coachee (\figurename~\ref{fig:Coachee_View}) troviamo le informazioni per il coachee selezionato, partendo dai suoi dati sensibili e la lista in schede delle patologie.
+
+Cliccando su una delle patologie si ottiene un elenco di schede relative alle Coach Actions relative alla patologia selezionata. Allo stesso modo si mantiene il funzionamento anche per le Coach Events.
+
+\begin{figure}
+\center
+\includegraphics[height=250px]{imgs/Coachees_List.png}
+\caption{Wireframe Home Caregiver \label{fig:Coachees_List}}
+\end{figure} 
+
+\begin{figure}
+\center
+\includegraphics[height=250px]{imgs/Coachee_View.png}
+\caption{Wireframe Info Coachee \label{fig:Coachee_View}}
+\end{figure} 
+
 
 \end{document}
